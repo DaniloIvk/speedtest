@@ -1,0 +1,10 @@
+FROM serversideup/php:8.4-cli-alpine AS base
+USER root
+RUN install-php-extensions mongodb pdo_mysql pdo_pgsql gd zip sockets
+USER www-data
+FROM base AS runtime
+WORKDIR /var/www/html
+COPY --chown=www-data:www-data . .
+RUN php artisan octane:install --server=roadrunner
+EXPOSE 8000
+CMD ["php", "artisan", "octane:start", "--server=roadrunner", "--host=0.0.0.0", "--port=8000", "--workers=10"]

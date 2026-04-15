@@ -1,0 +1,11 @@
+FROM serversideup/php:8.4-frankenphp-alpine AS base
+USER root
+RUN install-php-extensions mongodb pdo_mysql pdo_pgsql gd zip
+USER www-data
+FROM base AS runtime
+WORKDIR /var/www/html
+COPY --chown=www-data:www-data . .
+RUN php artisan octane:install --server=frankenphp
+EXPOSE 8000
+# FrankenPHP uses slightly different worker configuration
+CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000", "--workers=10"]

@@ -1,0 +1,9 @@
+FROM serversideup/php:8.4-fpm-nginx-alpine AS base
+USER root
+RUN install-php-extensions mongodb pdo_mysql pdo_pgsql gd zip
+USER www-data
+FROM base AS runtime
+WORKDIR /var/www/html
+COPY --chown=www-data:www-data . .
+EXPOSE 8080
+# ServerSideUp automatically starts Nginx and PHP-FPM, no CMD needed

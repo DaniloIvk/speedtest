@@ -9,8 +9,22 @@ return new class extends Migration {
     {
         Schema::create('activity_log', function (Blueprint $table) {
             $table->id();
-            $table->nullableMorphs('causer', 'causer');
-            $table->nullableMorphs('subject', 'subject');
+
+//          Rest of databases
+//
+//          $table->nullableMorphs('causer', 'causer');
+//          $table->nullableMorphs('subject', 'subject');
+
+//          MongoDB doesn't support nullable morphs
+
+            $table->string('causer_type')->nullable();
+            $table->unsignedBigInteger('causer_id')->nullable();
+            $table->index(['causer_type', 'causer_id']);
+
+            $table->string('subject_type')->nullable();
+            $table->unsignedBigInteger('subject_id')->nullable();
+            $table->index(['subject_type', 'subject_id']);
+
             $table->string('event')->nullable();
             $table->string('log_name')->nullable()->index();
             $table->string('description');

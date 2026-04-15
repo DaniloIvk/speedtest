@@ -31,4 +31,5 @@ frankenphp-worker.php
 # Project exclude paths
 /bootstrap/cache/
 /storage/app/
-/storage/framework/
+/storage/framework/rr
+.rr.yaml

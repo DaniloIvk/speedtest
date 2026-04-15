@@ -1,0 +1,142 @@
+services:
+  app-roadrunner:
+    build:
+      context: .
+      dockerfile: Dockerfile.roadrunner
+    container_name: speedtest-app-roadrunner
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:8000"
+    environment:
+      - PHP_OPCACHE_ENABLE=1
+      - DB_DATABASE=speedtest
+      # MariaDB
+#      - DB_CONNECTION=mariadb
+#      - DB_HOST=mariadb
+#      - DB_PORT=3306
+#      - DB_USERNAME=root
+#      - DB_PASSWORD=root
+      # PostgreSQL
+#      - DB_CONNECTION=pgsql
+#      - DB_HOST=postgres
+#      - DB_PORT=5432
+#      - DB_USERNAME=postgres
+#      - DB_PASSWORD=root
+      # MongoDB
+      - DB_CONNECTION=mongodb
+      - DB_URI=mongodb://root:123@mongodb:27017/
+      - OCTANE_SERVER=roadrunner
+      - PUID=1000
+      - PGID=1000
+    depends_on:
+      - mariadb
+      - postgres
+      - mongodb
+
+  app-frankenphp:
+    build:
+      context: .
+      dockerfile: Dockerfile.frankenphp
+    container_name: speedtest-app-frankenphp
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:8000"
+    environment:
+      - PHP_OPCACHE_ENABLE=1
+      - DB_DATABASE=speedtest
+      # MariaDB
+#      - DB_CONNECTION=mariadb
+#      - DB_HOST=mariadb
+#      - DB_PORT=3306
+#      - DB_USERNAME=root
+#      - DB_PASSWORD=root
+      # PostgreSQL
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=root
+      # MongoDB
+#      - DB_CONNECTION=mongodb
+      - DB_URI=mongodb://root:123@mongodb:27017/
+      - OCTANE_SERVER=frankenphp
+      - PUID=1000
+      - PGID=1000
+    depends_on:
+      - mariadb
+      - postgres
+      - mongodb
+
+  app-fpm:
+    build:
+      context: .
+      dockerfile: Dockerfile.fpm
+    container_name: speedtest-app-fpm
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:8080"
+    environment:
+      - PHP_OPCACHE_ENABLE=1
+      - DB_DATABASE=speedtest
+      # MariaDB
+#      - DB_CONNECTION=mariadb
+#      - DB_HOST=mariadb
+#      - DB_PORT=3306
+#      - DB_USERNAME=root
+#      - DB_PASSWORD=root
+      # PostgreSQL
+#      - DB_CONNECTION=pgsql
+#      - DB_HOST=postgres
+#      - DB_PORT=5432
+#      - DB_USERNAME=postgres
+#      - DB_PASSWORD=root
+      # MongoDB
+      - DB_CONNECTION=mongodb
+      - DB_URI=mongodb://root:123@mongodb:27017/
+      - PUID=1000
+      - PGID=1000
+    depends_on:
+      - mariadb
+      - postgres
+      - mongodb
+
+  mariadb:
+    image: mariadb:latest
+    container_name: speedtest-mariadb
+    ports: [ "3306:3306" ]
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: speedtest
+
+  postgres:
+    image: postgres:latest
+    container_name: speedtest-postgres
+    ports: [ "5432:5432" ]
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: speedtest
+
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    container_name: speedtest-mongodb
+    ports: [ "27017:27017" ]
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: root
+      MONGODB_INITDB_ROOT_PASSWORD: 123
+
+  valkey:
+    image: valkey/valkey:latest
+    container_name: speedtest-valkey
+    ports: [ "6379:6379" ]
