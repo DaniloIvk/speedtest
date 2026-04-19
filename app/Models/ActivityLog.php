@@ -3,18 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Unguarded;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Collection;
-use MongoDB\Laravel\Eloquent\HybridRelations;
-use MongoDB\Laravel\Eloquent\Model;
 use Spatie\Activitylog\Contracts\Activity as ActivityContract;
 
-//use Illuminate\Database\Eloquent\Model;
+//use MongoDB\Laravel\Eloquent\HybridRelations;
+//use MongoDB\Laravel\Eloquent\Model;
 
 #[Unguarded]
 class ActivityLog extends Model implements ActivityContract
 {
-    use HybridRelations;
+//    use HybridRelations;
 
     // Force this model to use the MongoDB connection
 //    protected $connection = 'mongodb';
