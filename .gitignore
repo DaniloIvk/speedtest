@@ -28,6 +28,10 @@ Thumbs.db
 frankenphp
 frankenphp-worker.php
 
+# Elysia
+/elysia/node_modules
+/elysia/.env
+
 # Project exclude paths
 /bootstrap/cache/
 /storage/app/
