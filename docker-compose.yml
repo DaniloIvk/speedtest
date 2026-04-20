@@ -91,11 +91,11 @@ services:
       - PHP_OPCACHE_ENABLE=1
       - DB_DATABASE=speedtest
       # MariaDB
-#      - DB_CONNECTION=mariadb
-#      - DB_HOST=mariadb
-#      - DB_PORT=3306
-#      - DB_USERNAME=root
-#      - DB_PASSWORD=root
+      - DB_CONNECTION=mariadb
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
       # PostgreSQL
 #      - DB_CONNECTION=pgsql
 #      - DB_HOST=postgres
@@ -103,7 +103,7 @@ services:
 #      - DB_USERNAME=postgres
 #      - DB_PASSWORD=root
       # MongoDB
-      - DB_CONNECTION=mongodb
+#      - DB_CONNECTION=mongodb
       - DB_URI=mongodb://root:123@mongodb:27017/
       - PUID=1000
       - PGID=1000
@@ -111,6 +111,19 @@ services:
       - mariadb
       - postgres
       - mongodb
+
+  app-elysia:
+    build:
+      context: .
+      dockerfile: Dockerfile.elysia
+    container_name: speedtest-app-elysia
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_URL=mysql://root:root@mariadb:3306/speedtest
+    depends_on:
+      - postgres
 
   mariadb:
     image: mariadb:latest
